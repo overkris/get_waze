@@ -49,7 +49,7 @@ class ImportWaze extends Command
         $entityManager->persist($newEventLoad);
 
         // Get du fichier de config
-        $locator = new FileLocator(array(APP_ROOT.'\config'));
+        $locator = new FileLocator(array(APP_ROOT.'/config'));
         $aobjListeSegment = simplexml_load_file($locator->locate("segment_waze.xml", null));
 
         $idSegment = 1;
@@ -72,7 +72,10 @@ class ImportWaze extends Command
                 $newLoadWaze = new LoadWaze();
                 $newLoadWaze->setIdEvent($newEventLoad);
 
-                $newLoadWaze->setReturnApi(serialize($response->body));
+                // Get des alertes
+                $alert = $response->body->alerts;
+
+                $newLoadWaze->setReturnApi(serialize($alert));
                 $newLoadWaze->setSegment($idSegment);
                 $entityManager->persist($newLoadWaze);
             }
