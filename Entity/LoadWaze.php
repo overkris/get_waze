@@ -22,7 +22,7 @@ class LoadWaze
     /**
      * @var string
      *
-     * @ORM\Column(name="id_event", type="string", length=200, nullable=false)
+     * @Column(name="id_event", type="string", length=200, nullable=false)
      */
     private $idEvent;
 
