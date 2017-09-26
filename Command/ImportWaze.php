@@ -84,10 +84,11 @@ class ImportWaze extends Command
         }
 
         // Insert en base des événements
-        foreach ($aListeEvent as $aEvent) {
+        foreach ($aListeEvent as $isEvent => $aEvent) {
             // Ajout du retour de l'api avec l'event
             $newLoadWaze = new LoadWaze();
             $newLoadWaze->setIdLoad($newEventLoad);
+            $newLoadWaze->setIdEvent($isEvent);
             $newLoadWaze->setTypeEvent("POLICE");
             $newLoadWaze->setCoorX($aEvent["x"]);
             $newLoadWaze->setCoorY($aEvent["y"]);

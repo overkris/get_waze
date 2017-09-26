@@ -22,6 +22,13 @@ class LoadWaze
     /**
      * @var string
      *
+     * @ORM\Column(name="id_event", type="string", length=200, nullable=false)
+     */
+    private $idEvent;
+
+    /**
+     * @var string
+     *
      * @Column(name="type_event", type="string", length=20, nullable=false)
      */
     private $typeEvent;
@@ -71,6 +78,22 @@ class LoadWaze
     public function setId($id)
     {
         $this->id = $id;
+    }
+
+    /**
+     * @return string
+     */
+    public function getIdEvent()
+    {
+        return $this->idEvent;
+    }
+
+    /**
+     * @param string $idEvent
+     */
+    public function setIdEvent($idEvent)
+    {
+        $this->idEvent = $idEvent;
     }
 
     /**
