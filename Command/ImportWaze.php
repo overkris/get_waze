@@ -44,7 +44,7 @@ class ImportWaze extends Command
 
         // Création du nouveau Event
         $newEventLoad = new EventLoad();
-        $newEventLoad->setDateTimeEvent(new \DateTime("now"));
+        $newEventLoad->setDatetimeevent(new \DateTime("now"));
         $newEventLoad->setTimeLoad(0);
         $entityManager->persist($newEventLoad);
 
@@ -52,7 +52,7 @@ class ImportWaze extends Command
         $locator = new FileLocator(array(APP_ROOT.'/config'));
         $aobjListeSegment = simplexml_load_file($locator->locate("segment_waze.xml", null));
 
-        $idSegment = 1;
+        $aListeEvent = array();
         foreach ($aobjListeSegment as $idKey => $segment) {
             // COnstruction de la query
             $query = array(
@@ -67,23 +67,35 @@ class ImportWaze extends Command
 
             $response = Request::post(self::URL_WAZE, array('Accept' => 'application/json'), $query);
 
-            if ($response->code == 200) {
-                // Ajout du retour de l'api avec l'event
-                $newLoadWaze = new LoadWaze();
-                $newLoadWaze->setIdEvent($newEventLoad);
-
-                // Get des alertes
-                $alert = $response->body->alerts;
-
-                $newLoadWaze->setReturnApi(serialize($alert));
-                $newLoadWaze->setSegment($idSegment);
-                $entityManager->persist($newLoadWaze);
+            if ($response->code == 200 && isset($response->body->alerts)) {
+                foreach ($response->body->alerts as $aValue) {
+                    // On affiche que la police
+                    if ($aValue->type == "POLICE") {
+                        if (!isset($aListeEvent[$aValue->id])) {
+                            $aListeEvent[$aValue->id] = array(
+                                "x" => $aValue->location->x,
+                                "y" => $aValue->location->y,
+                                "nbUp" => $aValue->nThumbsUp
+                            );
+                        }
+                    }
+                }
             }
-            $idSegment++;
+        }
+
+        // Insert en base des événements
+        foreach ($aListeEvent as $aEvent) {
+            // Ajout du retour de l'api avec l'event
+            $newLoadWaze = new LoadWaze();
+            $newLoadWaze->setIdLoad($newEventLoad);
+            $newLoadWaze->setTypeEvent("POLICE");
+            $newLoadWaze->setCoorX($aEvent["x"]);
+            $newLoadWaze->setCoorY($aEvent["y"]);
+            $newLoadWaze->setNbUp($aEvent["nbUp"]);
+            $entityManager->persist($newLoadWaze);
         }
 
         $newEventLoad->setTimeLoad(microtime(true) - $iStartTime);
-        $entityManager->persist($newEventLoad);
         $entityManager->flush();
     }
 }

@@ -1,10 +1,11 @@
 <?php
+
 namespace Entity;
 
 /**
  * LoadWaze
  *
- * @Table(name="load_waze", indexes={@Index(name="FK_load_waze_event_load", columns={"id_event"})})
+ * @Table(name="load_waze", indexes={@Index(name="FK_load_waze_event_load", columns={"id_load"})})
  * @Entity
  */
 class LoadWaze
@@ -19,28 +20,42 @@ class LoadWaze
     private $id;
 
     /**
-     * @var boolean
-     *
-     * @Column(name="segment", type="smallint", nullable=false)
-     */
-    private $segment;
-
-    /**
      * @var string
      *
-     * @Column(name="return_api", type="text", nullable=false)
+     * @Column(name="type_event", type="string", length=20, nullable=false)
      */
-    private $returnApi;
+    private $typeEvent;
+
+    /**
+     * @var float
+     *
+     * @Column(name="coor_x", type="float", precision=10, scale=8, nullable=false)
+     */
+    private $coorX;
+
+    /**
+     * @var float
+     *
+     * @Column(name="coor_y", type="float", precision=10, scale=8, nullable=false)
+     */
+    private $coorY;
+
+    /**
+     * @var integer
+     *
+     * @Column(name="nb_up", type="smallint", nullable=false)
+     */
+    private $nbUp;
 
     /**
      * @var \EventLoad
      *
      * @ManyToOne(targetEntity="EventLoad")
      * @JoinColumns({
-     *   @JoinColumn(name="id_event", referencedColumnName="id")
+     *   @JoinColumn(name="id_load", referencedColumnName="id")
      * })
      */
-    private $idEvent;
+    private $idLoad;
 
     /**
      * @return int
@@ -59,53 +74,83 @@ class LoadWaze
     }
 
     /**
-     * @return bool
-     */
-    public function isSegment()
-    {
-        return $this->segment;
-    }
-
-    /**
-     * @param bool $segment
-     */
-    public function setSegment($segment)
-    {
-        $this->segment = $segment;
-    }
-
-    /**
      * @return string
      */
-    public function getReturnApi()
+    public function getTypeEvent()
     {
-        return $this->returnApi;
+        return $this->typeEvent;
     }
 
     /**
-     * @param string $returnApi
+     * @param string $typeEvent
      */
-    public function setReturnApi($returnApi)
+    public function setTypeEvent($typeEvent)
     {
-        $this->returnApi = $returnApi;
+        $this->typeEvent = $typeEvent;
+    }
+
+    /**
+     * @return float
+     */
+    public function getCoorX()
+    {
+        return $this->coorX;
+    }
+
+    /**
+     * @param float $coorX
+     */
+    public function setCoorX($coorX)
+    {
+        $this->coorX = $coorX;
+    }
+
+    /**
+     * @return float
+     */
+    public function getCoorY()
+    {
+        return $this->coorY;
+    }
+
+    /**
+     * @param float $coorY
+     */
+    public function setCoorY($coorY)
+    {
+        $this->coorY = $coorY;
+    }
+
+    /**
+     * @return int
+     */
+    public function getNbUp()
+    {
+        return $this->nbUp;
+    }
+
+    /**
+     * @param int $nbUp
+     */
+    public function setNbUp($nbUp)
+    {
+        $this->nbUp = $nbUp;
     }
 
     /**
      * @return EventLoad
      */
-    public function getIdEvent()
+    public function getIdLoad()
     {
-        return $this->idEvent;
+        return $this->idLoad;
     }
 
     /**
-     * @param EventLoad $idEvent
+     * @param EventLoad $idLoad
      */
-    public function setIdEvent($idEvent)
+    public function setIdLoad($idLoad)
     {
-        $this->idEvent = $idEvent;
+        $this->idLoad = $idLoad;
     }
-
-
 }
 
