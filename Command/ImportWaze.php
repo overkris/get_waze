@@ -56,16 +56,15 @@ class ImportWaze extends Command
         foreach ($aobjListeSegment as $idKey => $segment) {
             // COnstruction de la query
             $query = array(
-                "id" => $segment->id,
-                "mj" => $segment->mj,
-                "mu" => $segment->mu,
-                "left" => $segment->left,
-                "right" => $segment->right,
-                "bottom" => $segment->bottom,
-                "top" => $segment->top
+                "mj" => $segment->mj->__toString(),
+                "mu" => $segment->mu->__toString(),
+                "left" => $segment->left->__toString(),
+                "right" => $segment->right->__toString(),
+                "bottom" => $segment->bottom->__toString(),
+                "top" => $segment->top->__toString()
             );
 
-            $response = Request::post(self::URL_WAZE, array('Accept' => 'application/json'), $query);
+            $response = Request::get(self::URL_WAZE, array('Accept' => 'application/json'), $query);
 
             if ($response->code == 200 && isset($response->body->alerts)) {
                 foreach ($response->body->alerts as $aValue) {
@@ -75,6 +74,8 @@ class ImportWaze extends Command
                             $aListeEvent[$aValue->id] = array(
                                 "x" => $aValue->location->x,
                                 "y" => $aValue->location->y,
+                                "type" => $aValue->type,
+                                "subtype" => $aValue->subtype,
                                 "nbUp" => $aValue->nThumbsUp
                             );
                         }
@@ -89,7 +90,8 @@ class ImportWaze extends Command
             $newLoadWaze = new LoadWaze();
             $newLoadWaze->setIdLoad($newEventLoad);
             $newLoadWaze->setIdEvent($isEvent);
-            $newLoadWaze->setTypeEvent("POLICE");
+            $newLoadWaze->setTypeEvent($aEvent["type"]);
+            $newLoadWaze->setSubTypeEvent($aEvent["subtype"]);
             $newLoadWaze->setCoorX($aEvent["x"]);
             $newLoadWaze->setCoorY($aEvent["y"]);
             $newLoadWaze->setNbUp($aEvent["nbUp"]);
