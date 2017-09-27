@@ -34,6 +34,13 @@ class LoadWaze
     private $typeEvent;
 
     /**
+     * @var string
+     *
+     * @Column(name="sub_type_event", type="string", length=20, nullable=false)
+     */
+    private $subTypeEvent;
+
+    /**
      * @var float
      *
      * @Column(name="coor_x", type="float", precision=10, scale=8, nullable=false)
@@ -174,6 +181,22 @@ class LoadWaze
     public function setIdLoad($idLoad)
     {
         $this->idLoad = $idLoad;
+    }
+
+    /**
+     * @return string
+     */
+    public function getSubTypeEvent()
+    {
+        return $this->subTypeEvent;
+    }
+
+    /**
+     * @param string $subTypeEvent
+     */
+    public function setSubTypeEvent($subTypeEvent)
+    {
+        $this->subTypeEvent = $subTypeEvent;
     }
 }
 
